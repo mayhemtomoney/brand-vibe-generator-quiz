@@ -112,8 +112,8 @@
         }
 
         .result-board {
-            padding: 2rem;
-            margin-top: 2rem;
+            padding: 2rem 0;
+            margin-top: 0;
             border-radius: 12px;
             text-align: center;
             animation: fadeIn 0.5s ease;
@@ -150,6 +150,27 @@
             transform: scale(1.05);
             box-shadow: 0 0 20px var(--neon-magenta);
         }
+        
+        .back-to-hub-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--dim-text);
+            background: var(--neural-surface);
+            color: var(--dim-text);
+            text-decoration: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .back-to-hub-btn:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+        }
     </style>
 </head>
 <body>
@@ -159,147 +180,153 @@
     <div id="question-box"></div>
 </div>
 
+<a href="https://dopamine-drop.netlify.app/" class="back-to-hub-btn">&lt; BACK TO HUB</a>
+
 <script>
-const quizQuestions = [
-  {
-    question: "What’s the most important value you want your brand to convey?",
-    options: [
-      { label: "Environmental consciousness and authenticity", value: "eco" },
-      { label: "Simplicity and clarity", value: "minimalist" },
-      { label: "Creative boldness and energy", value: "bold" },
-      { label: "Playfulness and nostalgia", value: "retro" },
-      { label: "Innovation and forward-thinking", value: "futurist" },
-      { label: "Inclusivity and representation", value: "unity" },
-    ],
-  },
-  {
-    question: "How would you like your audience to feel when they interact with your brand?",
-    options: [
-      { label: "Balanced and grounded", value: "eco" },
-      { label: "Calm and focused", value: "minimalist" },
-      { label: "Energized and inspired", value: "bold" },
-      { label: "Uplifted and comforted", value: "retro" },
-      { label: "Curious and amazed", value: "futurist" },
-      { label: "Welcomed and seen", value: "unity" },
-    ],
-  },
-  {
-    question: "Which visual style are you most drawn to?",
-    options: [
-      { label: "Nature-inspired textures and organic forms", value: "eco" },
-      { label: "Clean lines, lots of whitespace, geometric shapes", value: "minimalist" },
-      { label: "Vibrant color blocking and eclectic compositions", value: "bold" },
-      { label: "Vintage illustrations, retro patterns", value: "retro" },
-      { label: "Iridescent, metallic, or digital abstractions", value: "futurist" },
-      { label: "Portraits of diverse people, authentic photography", value: "unity" },
-    ],
-  },
-  {
-    question: "What color palette speaks to you?",
-    options: [
-      { label: "Earthy greens, browns, subtle neutrals", value: "eco" },
-      { label: "Soft pastels or monochrome tones", value: "minimalist" },
-      { label: "Bright primaries, neon, saturated hues", value: "bold" },
-      { label: "Warm vintage shades, muted neons", value: "retro" },
-      { label: "Metallics, holographics, blue/purple spectrum", value: "futurist" },
-      { label: "Warm, accessible mixes", value: "unity" },
-    ],
-  }
-];
+document.addEventListener('DOMContentLoaded', () => {
+    const quizQuestions = [
+      {
+        question: "What’s the most important value you want your brand to convey?",
+        options: [
+          { label: "Environmental consciousness and authenticity", value: "eco" },
+          { label: "Simplicity and clarity", value: "minimalist" },
+          { label: "Creative boldness and energy", value: "bold" },
+          { label: "Playfulness and nostalgia", value: "retro" },
+          { label: "Innovation and forward-thinking", value: "futurist" },
+          { label: "Inclusivity and representation", value: "unity" },
+        ],
+      },
+      {
+        question: "How would you like your audience to feel when they interact with your brand?",
+        options: [
+          { label: "Balanced and grounded", value: "eco" },
+          { label: "Calm and focused", value: "minimalist" },
+          { label: "Energized and inspired", value: "bold" },
+          { label: "Uplifted and comforted", value: "retro" },
+          { label: "Curious and amazed", value: "futurist" },
+          { label: "Welcomed and seen", value: "unity" },
+        ],
+      },
+      {
+        question: "Which visual style are you most drawn to?",
+        options: [
+          { label: "Nature-inspired textures and organic forms", value: "eco" },
+          { label: "Clean lines, lots of whitespace, geometric shapes", value: "minimalist" },
+          { label: "Vibrant color blocking and eclectic compositions", value: "bold" },
+          { label: "Vintage illustrations, retro patterns", value: "retro" },
+          { label: "Iridescent, metallic, or digital abstractions", value: "futurist" },
+          { label: "Portraits of diverse people, authentic photography", value: "unity" },
+        ],
+      },
+      {
+        question: "What color palette speaks to you?",
+        options: [
+          { label: "Earthy greens, browns, subtle neutrals", value: "eco" },
+          { label: "Soft pastels or monochrome tones", value: "minimalist" },
+          { label: "Bright primaries, neon, saturated hues", value: "bold" },
+          { label: "Warm vintage shades, muted neons", value: "retro" },
+          { label: "Metallics, holographics, blue/purple spectrum", value: "futurist" },
+          { label: "Warm, accessible mixes", value: "unity" },
+        ],
+      }
+    ];
 
-const resultBoards = {
-  eco: {
-    title: "Eco Maven",
-    desc: "Earthy, organic, and authentic. Your brand feels grounded—think soft greens, natural textures, and hand-drawn elements.",
-  },
-  minimalist: {
-    title: "Minimalist Muse",
-    desc: "Modern, sleek, and effortless. You favor simplicity—monochrome palettes, elegant layouts, and loads of whitespace.",
-  },
-  bold: {
-    title: "Bold Collider",
-    desc: "Vibrant energy and maximum impact. Neon accents, pop graphics, and bold type anchor your expressive visual style.",
-  },
-  retro: {
-    title: "Retro Reboot",
-    desc: "Playful nostalgia with a fresh twist. Warm vintage colors, funky serifs, and iconic throwback motifs define your look.",
-  },
-  futurist: {
-    title: "Futurist Dream",
-    desc: "Iridescent, holographic, and ahead of the curve. Clean digital lines and space-age hues set your brand apart.",
-  },
-  unity: {
-    title: "Unity Collective",
-    desc: "Warm, human, and genuinely diverse. Inviting palettes, rounded fonts, and people-driven imagery showcase connection.",
-  }
-};
+    const resultBoards = {
+      eco: {
+        title: "Eco Maven",
+        desc: "Earthy, organic, and authentic. Your brand feels grounded—think soft greens, natural textures, and hand-drawn elements.",
+      },
+      minimalist: {
+        title: "Minimalist Muse",
+        desc: "Modern, sleek, and effortless. You favor simplicity—monochrome palettes, elegant layouts, and loads of whitespace.",
+      },
+      bold: {
+        title: "Bold Collider",
+        desc: "Vibrant energy and maximum impact. Neon accents, pop graphics, and bold type anchor your expressive visual style.",
+      },
+      retro: {
+        title: "Retro Reboot",
+        desc: "Playful nostalgia with a fresh twist. Warm vintage colors, funky serifs, and iconic throwback motifs define your look.",
+      },
+      futurist: {
+        title: "Futurist Dream",
+        desc: "Iridescent, holographic, and ahead of the curve. Clean digital lines and space-age hues set your brand apart.",
+      },
+      unity: {
+        title: "Unity Collective",
+        desc: "Warm, human, and genuinely diverse. Inviting palettes, rounded fonts, and people-driven imagery showcase connection.",
+      }
+    };
 
-let current = 0;
-let answers = [];
+    let current = 0;
+    let answers = [];
+    const questionBox = document.getElementById('question-box');
+    const quizContainer = document.getElementById('quiz');
 
-function renderQuestion() {
-  const q = quizQuestions[current];
-  let html = `<h2>Question ${current + 1} of ${quizQuestions.length}</h2>
-    <div class="question">${q.question}</div>
-    <div class="options">`;
-  q.options.forEach((opt, i) => {
-    html += `<button onclick="selectOption('${opt.value}')">${opt.label}</button>`;
-  });
-  html += `<button class="surprise" onclick="surpriseMe()">Surprise Me</button></div>`;
-  document.getElementById('question-box').innerHTML = html;
-}
+    window.renderQuestion = function() {
+      const q = quizQuestions[current];
+      let html = `<h2>Question ${current + 1} of ${quizQuestions.length}</h2>
+        <div class="question">${q.question}</div>
+        <div class="options">`;
+      q.options.forEach((opt, i) => {
+        html += `<button onclick="selectOption('${opt.value}')">${opt.label}</button>`;
+      });
+      html += `<button class="surprise" onclick="surpriseMe()">Surprise Me</button></div>`;
+      questionBox.innerHTML = html;
+    }
 
-function selectOption(val) {
-  answers.push(val);
-  current++;
-  if (current < quizQuestions.length) {
+    window.selectOption = function(val) {
+      answers.push(val);
+      current++;
+      if (current < quizQuestions.length) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    window.surpriseMe = function() {
+      showSurpriseResult();
+    }
+
+    function tallyResult() {
+      const score = {};
+      answers.forEach(val => { score[val] = (score[val] || 0) + 1; });
+      const sorted = Object.entries(score).sort((a,b) => b[1] - a[1]);
+      const topScore = sorted[0][1];
+      const tied = sorted.filter(e => e[1] === topScore).map(e => e[0]);
+      return tied[Math.floor(Math.random() * tied.length)];
+    }
+
+    function showResult() {
+      const vibe = tallyResult();
+      const board = resultBoards[vibe];
+      quizContainer.innerHTML = `
+        <div class="result-board">
+          <h1>${board.title}</h1>
+          <p>${board.desc}</p>
+          <button class="cta-btn" onclick="window.open('https://www.canva.com/design/DAF6AiYifa4/A_E0tQX8DGOhyeZPg_tMag/view?mode=preview','_blank')">
+            Unlock Canva Brand Boards
+          </button>
+        </div>
+      `;
+    }
+
+    function showSurpriseResult() {
+      quizContainer.innerHTML = `
+        <div class="result-board">
+          <h1 style="color: var(--neon-magenta);">PLOT TWIST!</h1>
+          <p>You're clearly a chaotic genius who can't be put in a box. Forget the rules. Here are all the brand boards. Go cause some trouble.</p>
+          <button class="cta-btn" onclick="window.open('https://www.canva.com/design/DAF6AiYifa4/A_E0tQX8DGOhyeZPg_tMag/view?mode=preview','_blank')">
+            Unlock ALL Canva Brand Boards
+          </button>
+        </div>
+      `;
+    }
+
+    // Start quiz
     renderQuestion();
-  } else {
-    showResult();
-  }
-}
-
-function surpriseMe() {
-  showSurpriseResult();
-}
-
-function tallyResult() {
-  const score = {};
-  answers.forEach(val => { score[val] = (score[val] || 0) + 1; });
-  const sorted = Object.entries(score).sort((a,b) => b[1] - a[1]);
-  const topScore = sorted[0][1];
-  const tied = sorted.filter(e => e[1] === topScore).map(e => e[0]);
-  return tied[Math.floor(Math.random() * tied.length)];
-}
-
-function showResult() {
-  const vibe = tallyResult();
-  const board = resultBoards[vibe];
-  document.getElementById('quiz').innerHTML = `
-    <div class="result-board">
-      <h1>${board.title}</h1>
-      <p>${board.desc}</p>
-      <button class="cta-btn" onclick="window.open('https://www.canva.com/design/DAF6AiYifa4/A_E0tQX8DGOhyeZPg_tMag/view?mode=preview','_blank')">
-        Unlock Canva Brand Boards
-      </button>
-    </div>
-  `;
-}
-
-function showSurpriseResult() {
-  document.getElementById('quiz').innerHTML = `
-    <div class="result-board">
-      <h1 style="color: var(--neon-magenta);">PLOT TWIST!</h1>
-      <p>You're clearly a chaotic genius who can't be put in a box. Forget the rules. Here are all the brand boards. Go cause some trouble.</p>
-      <button class="cta-btn" onclick="window.open('https://www.canva.com/design/DAF6AiYifa4/A_E0tQX8DGOhyeZPg_tMag/view?mode=preview','_blank')">
-        Unlock ALL Canva Brand Boards
-      </button>
-    </div>
-  `;
-}
-
-// Start quiz
-renderQuestion();
+});
 </script>
 </body>
 </html>
